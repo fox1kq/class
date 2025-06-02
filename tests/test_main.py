@@ -111,3 +111,21 @@ def test_category_products_and_count(smartphone1, smartphone2):
     assert len(category.products) == 2
     assert category.product_count == 2
     assert smartphone1.name in category.products[0]
+
+
+def test_zero_quantity_raises_value_error():
+    with pytest.raises(ValueError) as excinfo:
+        Product("Test Product", "Test Description", 1000.0, 0)
+    assert str(excinfo.value) == "Товар с нулевым количеством не может быть добавлен"
+
+
+def test_average_price_with_products():
+    p1 = Product("P1", "D1", 100, 1)
+    p2 = Product("P2", "D2", 300, 1)
+    cat = Category("Test", "Test Desc", [p1, p2])
+    assert cat.average_price() == 200
+
+
+def test_average_price_with_no_products():
+    cat = Category("Empty", "No products", [])
+    assert cat.average_price() == 0
