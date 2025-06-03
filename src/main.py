@@ -37,6 +37,8 @@ class Mixin:
 
 class Product(Mixin, BaseProduct):
     def __init__(self, name, description, price, quantity):
+        if quantity == 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
         super().__init__(name, description, price, quantity)
 
     @classmethod
@@ -79,6 +81,13 @@ class Category(BaseEntity):
         super().__init__(name, description)
         self.__products = products or []
         Category.category_count += 1
+
+    def average_price(self):
+        try:
+            total = sum(product.price for product in self.__products)
+            return total / len(self.__products)
+        except ZeroDivisionError:
+            return 0
 
     def add_product(self, product):
         if isinstance(product, Product):
